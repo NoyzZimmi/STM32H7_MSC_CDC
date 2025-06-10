@@ -24,8 +24,6 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "main.h"
-#include "usb_otg.h"
-#include "ux_dcd_stm32.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,8 +43,11 @@
 
 /* Private variables ---------------------------------------------------------*/
 
+static ULONG storage_interface_number;
+static ULONG storage_configuration_number;
 static ULONG cdc_acm_interface_number;
 static ULONG cdc_acm_configuration_number;
+static UX_SLAVE_CLASS_STORAGE_PARAMETER storage_parameter;
 static UX_SLAVE_CLASS_CDC_ACM_PARAMETER cdc_acm_parameter;
 static TX_THREAD ux_device_app_thread;
 
@@ -133,6 +134,66 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
     /* USER CODE END USBX_DEVICE_INITIALIZE_ERROR */
   }
 
+  /* Initialize the storage class parameters for the device */
+  storage_parameter.ux_slave_class_storage_instance_activate   = USBD_STORAGE_Activate;
+  storage_parameter.ux_slave_class_storage_instance_deactivate = USBD_STORAGE_Deactivate;
+
+  /* Store the number of LUN in this device storage instance */
+  storage_parameter.ux_slave_class_storage_parameter_number_lun = STORAGE_NUMBER_LUN;
+
+  /* Initialize the storage class parameters for reading/writing to the Flash Disk */
+  storage_parameter.ux_slave_class_storage_parameter_lun[0].
+    ux_slave_class_storage_media_last_lba = USBD_STORAGE_GetMediaLastLba();
+
+  storage_parameter.ux_slave_class_storage_parameter_lun[0].
+    ux_slave_class_storage_media_block_length = USBD_STORAGE_GetMediaBlocklength();
+
+  storage_parameter.ux_slave_class_storage_parameter_lun[0].
+    ux_slave_class_storage_media_type = 0;
+
+  storage_parameter.ux_slave_class_storage_parameter_lun[0].
+    ux_slave_class_storage_media_removable_flag = STORAGE_REMOVABLE_FLAG;
+
+  storage_parameter.ux_slave_class_storage_parameter_lun[0].
+    ux_slave_class_storage_media_read_only_flag = STORAGE_READ_ONLY;
+
+  storage_parameter.ux_slave_class_storage_parameter_lun[0].
+    ux_slave_class_storage_media_read = USBD_STORAGE_Read;
+
+  storage_parameter.ux_slave_class_storage_parameter_lun[0].
+    ux_slave_class_storage_media_write = USBD_STORAGE_Write;
+
+  storage_parameter.ux_slave_class_storage_parameter_lun[0].
+    ux_slave_class_storage_media_flush = USBD_STORAGE_Flush;
+
+  storage_parameter.ux_slave_class_storage_parameter_lun[0].
+    ux_slave_class_storage_media_status = USBD_STORAGE_Status;
+
+  storage_parameter.ux_slave_class_storage_parameter_lun[0].
+    ux_slave_class_storage_media_notification = USBD_STORAGE_Notification;
+
+  /* USER CODE BEGIN STORAGE_PARAMETER */
+
+  /* USER CODE END STORAGE_PARAMETER */
+
+  /* Get storage configuration number */
+  storage_configuration_number = USBD_Get_Configuration_Number(CLASS_TYPE_MSC, 0);
+
+  /* Find storage interface number */
+  storage_interface_number = USBD_Get_Interface_Number(CLASS_TYPE_MSC, 0);
+
+  /* Initialize the device storage class */
+  if (ux_device_stack_class_register(_ux_system_slave_class_storage_name,
+                                     ux_device_class_storage_entry,
+                                     storage_configuration_number,
+                                     storage_interface_number,
+                                     &storage_parameter) != UX_SUCCESS)
+  {
+    /* USER CODE BEGIN USBX_DEVICE_STORAGE_REGISTER_ERROR */
+    return UX_ERROR;
+    /* USER CODE END USBX_DEVICE_STORAGE_REGISTER_ERROR */
+  }
+
   /* Initialize the cdc acm class parameters for the device */
   cdc_acm_parameter.ux_slave_class_cdc_acm_instance_activate   = USBD_CDC_ACM_Activate;
   cdc_acm_parameter.ux_slave_class_cdc_acm_instance_deactivate = USBD_CDC_ACM_Deactivate;
@@ -182,6 +243,15 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
 
   /* USER CODE BEGIN MX_USBX_Device_Init1 */
 
+  // ====================================================
+  //       Mass storage device
+  // ====================================================
+
+  // Create the event flags group
+  if (tx_event_flags_create(&UsbxMscEventFlag, "UsbX Msc Event Flag") != TX_SUCCESS)
+  {
+    return TX_GROUP_ERROR;
+  }
 
   // ====================================================
   //        Virtual COM port threads
@@ -218,12 +288,6 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
   ret = USB_CDC_init();
   if(ret != TX_SUCCESS){
       return ret;
-  }
-
-  /* Create the event flags group */
-  if (tx_event_flags_create(&UsbxMscEventFlag, "Event Flag") != TX_SUCCESS)
-  {
-    return TX_GROUP_ERROR;
   }
 
   /* USER CODE END MX_USBX_Device_Init1 */
