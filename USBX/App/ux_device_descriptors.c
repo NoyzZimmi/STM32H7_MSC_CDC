@@ -45,7 +45,6 @@
 USBD_DevClassHandleTypeDef  USBD_Device_FS, USBD_Device_HS;
 
 uint8_t UserClassInstance[USBD_MAX_CLASS_INTERFACES] = {
-  CLASS_TYPE_MSC,
   CLASS_TYPE_CDC_ACM,
 };
 
@@ -120,11 +119,6 @@ static void USBD_FrameWork_AddConfDesc(uint32_t Conf, uint32_t *pSze);
 
 static void USBD_FrameWork_AssignEp(USBD_DevClassHandleTypeDef *pdev, uint8_t Add,
                                     uint8_t Type, uint32_t Sze);
-
-#if USBD_MSC_CLASS_ACTIVATED == 1U
-static void USBD_FrameWork_MSCDesc(USBD_DevClassHandleTypeDef *pdev,
-                                   uint32_t pConf, uint32_t *Sze);
-#endif /* USBD_MSC_CLASS_ACTIVATED == 1U */
 
 #if USBD_CDC_ACM_CLASS_ACTIVATED == 1U
 static void USBD_FrameWork_CDCDesc(USBD_DevClassHandleTypeDef *pdev,
@@ -520,47 +514,6 @@ uint8_t  USBD_FrameWork_AddToConfDesc(USBD_DevClassHandleTypeDef *pdev, uint8_t 
   switch (pdev->tclasslist[pdev->classId].ClassType)
   {
 
-#if USBD_MSC_CLASS_ACTIVATED == 1U
-
-    case CLASS_TYPE_MSC:
-
-      /* Find the first available interface slot and Assign number of interfaces */
-      interface = USBD_FrameWork_FindFreeIFNbr(pdev);
-      pdev->tclasslist[pdev->classId].NumIf = 1U;
-      pdev->tclasslist[pdev->classId].Ifs[0] = interface;
-
-      /* Assign endpoint numbers */
-      pdev->tclasslist[pdev->classId].NumEps = 2; /* EP_IN, EP_OUT */
-
-      /* Check the current speed to assign endpoints */
-      if (pdev->Speed == USBD_HIGH_SPEED)
-      {
-        /* Assign IN Endpoint */
-        USBD_FrameWork_AssignEp(pdev, USBD_MSC_EPIN_ADDR,
-                                USBD_EP_TYPE_BULK, USBD_MSC_EPIN_HS_MPS);
-
-        /* Assign OUT Endpoint */
-        USBD_FrameWork_AssignEp(pdev, USBD_MSC_EPOUT_ADDR,
-                                USBD_EP_TYPE_BULK, USBD_MSC_EPOUT_HS_MPS);
-      }
-      else
-      {
-        /* Assign IN Endpoint */
-        USBD_FrameWork_AssignEp(pdev, USBD_MSC_EPIN_ADDR,
-                                USBD_EP_TYPE_BULK, USBD_MSC_EPIN_FS_MPS);
-
-        /* Assign OUT Endpoint */
-        USBD_FrameWork_AssignEp(pdev, USBD_MSC_EPOUT_ADDR,
-                                USBD_EP_TYPE_BULK, USBD_MSC_EPOUT_FS_MPS);
-      }
-
-      /* Configure and Append the Descriptor */
-      USBD_FrameWork_MSCDesc(pdev, (uint32_t)pCmpstConfDesc, &pdev->CurrConfDescSz);
-
-      break;
-
-#endif /* USBD_MSC_CLASS_ACTIVATED */
-
 #if USBD_CDC_ACM_CLASS_ACTIVATED == 1
 
     case CLASS_TYPE_CDC_ACM:
@@ -701,44 +654,6 @@ static void  USBD_FrameWork_AssignEp(USBD_DevClassHandleTypeDef *pdev,
   pdev->tclasslist[pdev->classId].Eps[idx].size = (uint16_t) Sze;
   pdev->tclasslist[pdev->classId].Eps[idx].is_used = 1U;
 }
-
-#if USBD_MSC_CLASS_ACTIVATED == 1
-/**
-  * @brief  USBD_FrameWork_MSCDesc
-  *         Configure and Append the MSC Descriptor
-  * @param  pdev: device instance
-  * @param  pConf: Configuration descriptor pointer
-  * @param  Sze: pointer to the current configuration descriptor size
-  * @retval None
-  */
-static void  USBD_FrameWork_MSCDesc(USBD_DevClassHandleTypeDef *pdev,
-                                    uint32_t pConf, uint32_t *Sze)
-{
-  USBD_IfDescTypedef       *pIfDesc;
-  USBD_EpDescTypedef       *pEpDesc;
-
-  /* Append MSC Interface descriptor */
-  __USBD_FRAMEWORK_SET_IF((pdev->tclasslist[pdev->classId].Ifs[0]), (0U), \
-                          (uint8_t)(pdev->tclasslist[pdev->classId].NumEps),
-                          (0x08U), (0x06U), (0x50U), (0U));
-
-  /* Append Endpoint descriptor to Configuration descriptor */
-  __USBD_FRAMEWORK_SET_EP((pdev->tclasslist[pdev->classId].Eps[0].add),
-                          (USBD_EP_TYPE_BULK),
-                          (uint16_t)(pdev->tclasslist[pdev->classId].Eps[0].size),
-                          (0U), (0U));
-
-  /* Append Endpoint descriptor to Configuration descriptor */
-  __USBD_FRAMEWORK_SET_EP((pdev->tclasslist[pdev->classId].Eps[1].add),
-                          (USBD_EP_TYPE_BULK),
-                          (uint16_t)(pdev->tclasslist[pdev->classId].Eps[1].size),
-                          (0U), (0U));
-
-  /* Update Config Descriptor and IAD descriptor */
-  ((USBD_ConfigDescTypedef *)pConf)->bNumInterfaces += 1U;
-  ((USBD_ConfigDescTypedef *)pConf)->wDescriptorLength = *Sze;
-}
-#endif /* USBD_MSC_CLASS_ACTIVATED == 1 */
 
 #if USBD_CDC_ACM_CLASS_ACTIVATED == 1
 /**

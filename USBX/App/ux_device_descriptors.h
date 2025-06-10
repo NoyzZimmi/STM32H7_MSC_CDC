@@ -28,7 +28,6 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
 #include "ux_stm32_config.h"
-#include "ux_device_class_storage.h"
 #include "ux_device_class_cdc_acm.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -42,7 +41,6 @@ extern "C" {
 #define USBD_MAX_CLASS_ENDPOINTS                       9U
 #define USBD_MAX_CLASS_INTERFACES                      12U
 
-#define USBD_MSC_CLASS_ACTIVATED                       1U
 #define USBD_CDC_ACM_CLASS_ACTIVATED                   1U
 
 #define USBD_CONFIG_MAXPOWER                           25U
@@ -296,14 +294,6 @@ uint16_t USBD_Get_Configuration_Number(uint8_t class_type, uint8_t interface_typ
 #define USBD_DEVICE_QUALIFIER_DESC_SIZE               0x0AU
 
 #define USBD_STRING_FRAMEWORK_MAX_LENGTH              256U
-
-/* Device Storage Class */
-#define USBD_MSC_EPOUT_ADDR                           0x03U
-#define USBD_MSC_EPIN_ADDR                            0x83U
-#define USBD_MSC_EPOUT_FS_MPS                         64U
-#define USBD_MSC_EPOUT_HS_MPS                         512U
-#define USBD_MSC_EPIN_FS_MPS                          64U
-#define USBD_MSC_EPIN_HS_MPS                          512U
 
 /* Device CDC-ACM Class */
 #define USBD_CDCACM_EPINCMD_ADDR                      0x81U

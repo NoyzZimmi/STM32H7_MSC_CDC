@@ -28,7 +28,6 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "ux_api.h"
 #include "ux_device_descriptors.h"
-#include "ux_device_msc.h"
 #include "ux_device_cdc_acm.h"
 
 /* Private includes ----------------------------------------------------------*/
