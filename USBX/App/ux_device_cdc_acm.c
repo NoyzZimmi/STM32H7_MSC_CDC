@@ -136,7 +136,13 @@ UINT USB_CDC_init() {
 VOID USBD_CDC_ACM_Activate(VOID *cdc_acm_instance)
 {
   /* USER CODE BEGIN USBD_CDC_ACM_Activate */
-  UX_PARAMETER_NOT_USED(cdc_acm_instance);
+
+  // Set cdc instance
+  cdc_acm = (UX_SLAVE_CLASS_CDC_ACM *)cdc_acm_instance;
+
+  // Set TX event to start threads
+  tx_event_flags_set(&usb_cdc_events, USB_CDC_EVENT_Connected, TX_OR);
+
   /* USER CODE END USBD_CDC_ACM_Activate */
 
   return;
@@ -151,7 +157,17 @@ VOID USBD_CDC_ACM_Activate(VOID *cdc_acm_instance)
 VOID USBD_CDC_ACM_Deactivate(VOID *cdc_acm_instance)
 {
   /* USER CODE BEGIN USBD_CDC_ACM_Deactivate */
+
+  HAL_GPIO_WritePin(TP_A2_GPIO_Port, TP_A2_Pin, GPIO_PIN_SET);
+
+  // Clear CDC instance
   UX_PARAMETER_NOT_USED(cdc_acm_instance);
+  cdc_acm = UX_NULL;
+
+  // Clear flag by reading it
+  ULONG eventFlags;
+  tx_event_flags_get(&usb_cdc_events, USB_CDC_EVENT_Connected, TX_OR, &eventFlags, TX_NO_WAIT);
+
   /* USER CODE END USBD_CDC_ACM_Deactivate */
 
   return;

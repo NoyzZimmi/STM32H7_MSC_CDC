@@ -70,7 +70,7 @@ VOID USBD_STORAGE_Activate(VOID *storage_instance)
 {
   /* USER CODE BEGIN USBD_STORAGE_Activate */
   UX_PARAMETER_NOT_USED(storage_instance);
-//  HAL_GPIO_WritePin(DBG_TP32_GPIO_Port, DBG_TP32_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(TP_A1_GPIO_Port, TP_A1_Pin, GPIO_PIN_SET);
   /* USER CODE END USBD_STORAGE_Activate */
 
   return;
@@ -86,7 +86,7 @@ VOID USBD_STORAGE_Deactivate(VOID *storage_instance)
 {
   /* USER CODE BEGIN USBD_STORAGE_Desactivate */
   UX_PARAMETER_NOT_USED(storage_instance);
-//  HAL_GPIO_WritePin(DBG_TP32_GPIO_Port, DBG_TP32_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(TP_A1_GPIO_Port, TP_A1_Pin, GPIO_PIN_RESET);
   /* USER CODE END USBD_STORAGE_Desactivate */
 
   return;
@@ -114,7 +114,7 @@ UINT USBD_STORAGE_Read(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
   UX_PARAMETER_NOT_USED(lun);
   UX_PARAMETER_NOT_USED(media_status);
 
-//  HAL_GPIO_WritePin(DBG_TP79_GPIO_Port, DBG_TP79_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(TP_A2_GPIO_Port, TP_A2_Pin, GPIO_PIN_SET);
   ULONG ReadFlags = 0U;
 
   /* Check if the SD card is present */
@@ -138,7 +138,7 @@ UINT USBD_STORAGE_Read(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
           Error_Handler();
       }
   }
-//  HAL_GPIO_WritePin(DBG_TP79_GPIO_Port, DBG_TP79_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(TP_A2_GPIO_Port, TP_A2_Pin, GPIO_PIN_RESET);
   /* USER CODE END USBD_STORAGE_Read */
 
   return status;
@@ -168,7 +168,7 @@ UINT USBD_STORAGE_Write(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
   UX_PARAMETER_NOT_USED(storage_instance);
 
   ULONG WriteFlags = 0U;
-//  HAL_GPIO_WritePin(DBG_TP98_GPIO_Port, DBG_TP98_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(TP_A3_GPIO_Port, TP_A3_Pin, GPIO_PIN_SET);
 
   /* Check if the SD card is present */
   if (GPIO_SD_isCardPresent())
@@ -193,7 +193,7 @@ UINT USBD_STORAGE_Write(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
           Error_Handler();
       }
   }
-//  HAL_GPIO_WritePin(DBG_TP98_GPIO_Port, DBG_TP98_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(TP_A3_GPIO_Port, TP_A3_Pin, GPIO_PIN_RESET);
   /* USER CODE END USBD_STORAGE_Write */
 
   return status;

@@ -625,9 +625,7 @@
 
 /* Defined, this option enables the basic USBX error checking. This define is typically used
    when the application is debugging and removed after the application is fully debugged.  */
-/*
 #define UX_ENABLE_ERROR_CHECKING
-*/
 
 /* USER CODE BEGIN 2 */
 

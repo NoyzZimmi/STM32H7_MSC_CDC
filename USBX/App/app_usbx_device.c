@@ -316,13 +316,13 @@ static VOID app_ux_device_thread_entry(ULONG thread_input)
 	// EP0 IN - Control endpoint
 	HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 0, 128);
 
-	// EP1 IN - MSC Data IN
-	HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 1, 128);
+	// EP1 IN - CDC CMD IN (interrupt)
+	HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 1, 64);
 
-	// EP2 IN - CDC CMD IN (interrupt)
-	HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 2, 64);
+	// EP2 IN - CDC Data IN
+	HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 2, 128);
 
-	// EP3 IN - CDC Data IN
+	// EP3 IN - MSC Data IN
 	HAL_PCDEx_SetTxFiFo(&hpcd_USB_OTG_FS, 3, 128);
 
 	// ==================================================================
