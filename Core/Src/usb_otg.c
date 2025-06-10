@@ -21,7 +21,15 @@
 #include "usb_otg.h"
 
 /* USER CODE BEGIN 0 */
+#include "string.h"
 
+#if defined ( __ICCARM__ ) /* IAR Compiler */
+#pragma location = ".UsbHpcdSection"
+#elif defined ( __CC_ARM ) || defined(__ARMCC_VERSION) /* ARM Compiler 5/6 */
+__attribute__((section(".UsbHpcdSection")))
+#elif defined ( __GNUC__ ) /* GNU Compiler */
+__attribute__((section(".UsbHpcdSection")))
+#endif
 /* USER CODE END 0 */
 
 PCD_HandleTypeDef hpcd_USB_OTG_FS;
@@ -36,7 +44,7 @@ void MX_USB_OTG_FS_PCD_Init(void)
   /* USER CODE END USB_OTG_FS_Init 0 */
 
   /* USER CODE BEGIN USB_OTG_FS_Init 1 */
-
+  memset(&hpcd_USB_OTG_FS, 0x0, sizeof(PCD_HandleTypeDef));
   /* USER CODE END USB_OTG_FS_Init 1 */
   hpcd_USB_OTG_FS.Instance = USB_OTG_FS;
   hpcd_USB_OTG_FS.Init.dev_endpoints = 9;

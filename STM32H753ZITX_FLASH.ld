@@ -170,8 +170,12 @@ SECTIONS
   
     /* USB RAM section */
   .usb_sec (NOLOAD) : {
-  	/* Place UsbX memory pool - 32K */
-  	. = ORIGIN(USB_D1);
+  	/* Place USB PCD handle */
+    . = ORIGIN(USB_D1);
+    *(.UsbHpcdSection)
+  
+  	/* Place UsbX memory pool - 28K */
+  	. = ORIGIN(USB_D1) + 0x1000;
   	*(.UsbxPoolSection)
   } > USB_D1 AT> FLASH
 
