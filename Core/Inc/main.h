@@ -63,6 +63,8 @@ bool GPIO_SD_isCardPresent(void);
 /* Private defines -----------------------------------------------------------*/
 #define TP_A1_Pin GPIO_PIN_0
 #define TP_A1_GPIO_Port GPIOC
+#define TP_A4_Pin GPIO_PIN_2
+#define TP_A4_GPIO_Port GPIOC
 #define TP_A2_Pin GPIO_PIN_3
 #define TP_A2_GPIO_Port GPIOC
 #define TP_A0_Pin GPIO_PIN_3

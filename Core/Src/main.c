@@ -26,6 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "sdmmc.h"
+#include "stm32h7xx_nucleo.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -107,6 +108,18 @@ int main(void)
   MX_GPIO_Init();
   MX_ETH_Init();
   /* USER CODE BEGIN 2 */
+
+  HAL_GPIO_WritePin(TP_A0_GPIO_Port, TP_A0_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(TP_A1_GPIO_Port, TP_A1_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(TP_A2_GPIO_Port, TP_A2_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(TP_A3_GPIO_Port, TP_A3_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(TP_A4_GPIO_Port, TP_A4_Pin, GPIO_PIN_SET);
+
+  HAL_GPIO_WritePin(TP_A0_GPIO_Port, TP_A0_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(TP_A1_GPIO_Port, TP_A1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(TP_A2_GPIO_Port, TP_A2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(TP_A3_GPIO_Port, TP_A3_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(TP_A4_GPIO_Port, TP_A4_Pin, GPIO_PIN_RESET);
 
   if (GPIO_SD_isCardPresent())
   {

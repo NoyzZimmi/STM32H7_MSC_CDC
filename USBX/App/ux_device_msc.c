@@ -115,7 +115,7 @@ UINT USBD_STORAGE_Read(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
   UX_PARAMETER_NOT_USED(lun);
   UX_PARAMETER_NOT_USED(media_status);
 
-  HAL_GPIO_WritePin(TP_A2_GPIO_Port, TP_A2_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(TP_A4_GPIO_Port, TP_A4_Pin, GPIO_PIN_SET);
 
   ULONG ReadFlags = 0U;
 
@@ -143,7 +143,7 @@ UINT USBD_STORAGE_Read(VOID *storage_instance, ULONG lun, UCHAR *data_pointer,
     }
   }
 
-  HAL_GPIO_WritePin(TP_A2_GPIO_Port, TP_A2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(TP_A4_GPIO_Port, TP_A4_Pin, GPIO_PIN_RESET);
   /* USER CODE END USBD_STORAGE_Read */
 
   return status;

@@ -143,6 +143,7 @@ VOID USBD_CDC_ACM_Activate(VOID *cdc_acm_instance)
   // Set TX event to start threads
   tx_event_flags_set(&usb_cdc_events, USB_CDC_EVENT_Connected, TX_OR);
 
+  HAL_GPIO_WritePin(TP_A0_GPIO_Port, TP_A0_Pin, GPIO_PIN_SET);
   /* USER CODE END USBD_CDC_ACM_Activate */
 
   return;
@@ -158,7 +159,7 @@ VOID USBD_CDC_ACM_Deactivate(VOID *cdc_acm_instance)
 {
   /* USER CODE BEGIN USBD_CDC_ACM_Deactivate */
 
-  HAL_GPIO_WritePin(TP_A2_GPIO_Port, TP_A2_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(TP_A0_GPIO_Port, TP_A0_Pin, GPIO_PIN_RESET);
 
   // Clear CDC instance
   UX_PARAMETER_NOT_USED(cdc_acm_instance);
