@@ -178,6 +178,13 @@ SECTIONS
   	. = ORIGIN(USB_D1) + 0x1000;
   	*(.UsbxPoolSection)
   } > USB_D1 AT> FLASH
+  
+    /* used to store TraceX data */
+  .trace (NOLOAD):
+  {
+	. = ALIGN(4);
+    *(.trace)
+  } >RAM_D3
 
   /* Remove information from the standard libraries */
   /DISCARD/ :
