@@ -377,4 +377,24 @@ static int32_t check_sd_status(VOID)
   return HAL_ERROR;
 }
 
+/**
+  * @brief SD error callbacks
+  * @param hsd: Pointer SD handle
+  * @retval None
+  */
+void HAL_SD_ErrorCallback(SD_HandleTypeDef *hsd)
+{
+    printf("HAL_SD_ErrorCallback triggered, error=%lu.\n", hsd->ErrorCode);
+}
+
+/**
+  * @brief SD Abort callbacks
+  * @param hsd: Pointer SD handle
+  * @retval None
+  */
+void HAL_SD_AbortCallback(SD_HandleTypeDef *hsd)
+{
+    printf("HAL_SD_AbortCallback triggered.\n");
+}
+
 /* USER CODE END 1 */

@@ -61,7 +61,7 @@ TX_EVENT_FLAGS_GROUP UsbxMscEventFlag;
 /* Private function prototypes -----------------------------------------------*/
 static VOID app_ux_device_thread_entry(ULONG thread_input);
 /* USER CODE BEGIN PFP */
-
+static VOID USBX_errorHandler(UINT system_level, UINT system_context, UINT error_code);
 /* USER CODE END PFP */
 
 /**
@@ -85,6 +85,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
 
   /* USER CODE BEGIN MX_USBX_Device_Init0 */
 
+  ux_utility_error_callback_register(USBX_errorHandler);
   /* USER CODE END MX_USBX_Device_Init0 */
 
   /* Allocate the stack for USBX Memory */
@@ -290,6 +291,7 @@ UINT MX_USBX_Device_Init(VOID *memory_ptr)
       return ret;
   }
 
+
   /* USER CODE END MX_USBX_Device_Init1 */
 
   return ret;
@@ -337,5 +339,9 @@ static VOID app_ux_device_thread_entry(ULONG thread_input)
 }
 
 /* USER CODE BEGIN 1 */
+
+static VOID USBX_errorHandler(UINT system_level, UINT system_context, UINT error_code) {
+	printf("USBX_errorHandler: %u, %u, %u", system_level, system_context, error_code);
+}
 
 /* USER CODE END 1 */
